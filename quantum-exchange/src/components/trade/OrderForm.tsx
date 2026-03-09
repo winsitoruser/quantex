@@ -33,28 +33,39 @@ export default function OrderForm({ basePrice, symbol }: OrderFormProps) {
 
       <div className="p-3 space-y-3">
         {/* Buy/Sell Toggle */}
-        <div className="grid grid-cols-2 gap-1 p-1 bg-background rounded-lg">
+        <div className="grid grid-cols-2 gap-1 p-1 bg-background rounded-lg overflow-hidden">
+          {/* BUY BUTTON */}
           <button
             onClick={() => setSide("buy")}
             className={cn(
-              "py-2 text-sm font-semibold rounded-md transition-all",
+              "py-2 text-sm font-semibold transition-all transform",
+              // Tambahkan skew-x untuk memiringkan tombol
               side === "buy"
-                ? "bg-accent text-background shadow-sm"
-                : "text-muted hover:text-foreground"
+                ? "bg-accent text-background shadow-sm skew-x-[-10deg]"
+                : "text-muted hover:text-foreground skew-x-[-10deg] hover:-skew-x-12"
             )}
           >
-            Buy
+            {/* Counter-skew teks agar tetap lurus dan mudah dibaca */}
+            <span className="inline-block skew-x-10">
+              Buy
+            </span>
           </button>
+
+          {/* SELL BUTTON */}
           <button
             onClick={() => setSide("sell")}
             className={cn(
-              "py-2 text-sm font-semibold rounded-md transition-all",
+              "py-2 text-sm font-semibold transition-all transform",
+              // Tambahkan skew-x untuk memiringkan tombol
               side === "sell"
-                ? "bg-danger text-white shadow-sm"
-                : "text-muted hover:text-foreground"
+                ? "bg-danger text-white shadow-sm skew-x-[-10deg]"
+                : "text-muted hover:text-foreground skew-x-[-10deg] hover:-skew-x-12"
             )}
           >
-            Sell
+            {/* Counter-skew teks agar tetap lurus */}
+            <span className="inline-block skew-x-10">
+              Sell
+            </span>
           </button>
         </div>
 
@@ -168,7 +179,7 @@ export default function OrderForm({ basePrice, symbol }: OrderFormProps) {
         {/* Submit Button */}
         <button
           className={cn(
-            "w-full py-3 rounded-xl text-sm font-bold transition-all",
+            "w-full py-3 text-sm font-bold transition-all -skew-x-12",
             side === "buy"
               ? "bg-accent hover:bg-accent-hover text-background"
               : "bg-danger hover:bg-danger-hover text-white"

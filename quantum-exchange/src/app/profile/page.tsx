@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   User,
   Mail,
@@ -20,13 +20,24 @@ import {
   Award,
   Smartphone,
   Gift,
+  X,
+  Save,
+  Camera,
+  Check,
 } from "lucide-react";
 import { userProfile } from "@/data/userData";
 import { cn } from "@/lib/utils";
 import { formatNumber } from "@/lib/utils";
+import Modal from "@/components/ui/Modal";
 
 export default function ProfilePage() {
   const [copied, setCopied] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [profileData, setProfileData] = useState({
+    username: userProfile.username,
+    email: userProfile.email,
+    phone: userProfile.phone,
+  });
 
   const handleCopyReferral = () => {
     navigator.clipboard.writeText(userProfile.referralCode);
@@ -144,7 +155,10 @@ export default function ProfilePage() {
               })}
             </div>
           </div>
-          <button className="px-4 py-2 rounded-xl bg-card-hover border border-border text-sm font-medium text-foreground hover:bg-background transition-colors">
+          <button 
+            onClick={() => setShowEditModal(true)}
+            className="px-4 py-2 rounded-xl bg-accent hover:bg-accent-hover text-background text-sm font-medium transition-colors"
+          >
             Edit Profile
           </button>
         </div>
@@ -305,6 +319,151 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <Modal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        title="Edit Profile"
+        description="Update your profile information"
+        size="md"
+      >
+        <EditProfileForm 
+          profileData={profileData}
+          onSave={(data) => {
+            setProfileData(data);
+            setShowEditModal(false);
+          }}
+          onClose={() => setShowEditModal(false)}
+        />
+      </Modal>
     </div>
+  );
+}
+
+// Edit Profile Form Component
+function EditProfileForm({ 
+  profileData, 
+  onSave, 
+  onClose 
+}: { 
+  profileData: { username: string; email: string; phone: string };
+  onSave: (data: { username: string; email: string; phone: string }) => void;
+  onClose: () => void;
+}) {
+  const [formData, setFormData] = useState(profileData);
+  const [saved, setSaved] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+    setSaved(true);
+    setTimeout(() => {
+      onClose();
+    }, 1500);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {saved && (
+        <div className="p-4 rounded-xl bg-accent/10 border border-accent/30 flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
+          <p className="text-sm font-medium text-accent">Profile updated successfully!</p>
+        </div>
+      )}
+
+      <div>
+        <label className="block text-xs text-muted mb-1.5">
+          Username
+        </label>
+        <div className="relative">
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
+          <input
+            type="text"
+            value={formData.username}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-surface border border-border text-foreground text-sm outline-none focus:border-accent/50 transition-colors"
+            required
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-xs text-muted mb-1.5">
+          Email Address
+        </label>
+        <div className="relative">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-surface border border-border text-foreground text-sm outline-none focus:border-accent/50 transition-colors"
+            required
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-xs text-muted mb-1.5">
+          Phone Number
+        </label>
+        <div className="relative">
+          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
+          <input
+            type="tel"
+            value={formData.phone}
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-surface border border-border text-foreground text-sm outline-none focus:border-accent/50 transition-colors"
+            placeholder="+1 234 567 8900"
+          />
+        </div>
+      </div>
+
+      <div className="p-4 rounded-xl bg-info/5 border border-info/30">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="h-4 w-4 text-info shrink-0 mt-0.5" />
+          <div>
+            <p className="text-xs font-medium text-foreground">Note</p>
+            <p className="text-xs text-muted mt-1">
+              Email and phone changes may require verification.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 pt-2">
+        <button
+          type="button"
+          onClick={onClose}
+          disabled={saved}
+          className="flex-1 px-4 py-2.5 rounded-lg border border-border text-sm font-medium text-text-secondary hover:text-foreground hover:bg-card-hover transition-colors disabled:opacity-50"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={saved}
+          className={cn(
+            "flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2",
+            saved 
+              ? "bg-accent/50 text-background cursor-default"
+              : "bg-accent hover:bg-accent-hover text-background"
+          )}
+        >
+          {saved ? (
+            <>
+              <Check className="h-4 w-4" />
+              Saved!
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4" />
+              Save Changes
+            </>
+          )}
+        </button>
+      </div>
+    </form>
   );
 }

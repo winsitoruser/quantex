@@ -148,7 +148,7 @@ export default function IndicatorPanel({
   ];
 
   return (
-    <div className="w-[380px] bg-[#0d1117] border border-border rounded-lg shadow-2xl overflow-hidden">
+    <div className="w-[380px] bg-elevated border border-border rounded-lg shadow-2xl overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <h3 className="text-sm font-semibold text-foreground">Technical Indicators</h3>
@@ -240,7 +240,7 @@ export default function IndicatorPanel({
                       type="number"
                       value={val}
                       onChange={(e) => onParamChange(ind.id, key, Number(e.target.value))}
-                      className="w-14 px-1.5 py-0.5 text-[10px] bg-[#0d1117] border border-border rounded text-foreground text-center focus:outline-none focus:border-accent/50"
+                      className="w-14 px-1.5 py-0.5 text-[10px] bg-background border border-border rounded text-foreground text-center focus:outline-none focus:border-accent/50"
                     />
                   </div>
                 ))}

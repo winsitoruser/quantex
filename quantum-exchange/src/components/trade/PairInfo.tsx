@@ -52,9 +52,11 @@ export default function PairInfo({ pair }: PairInfoProps) {
           onClick={() => setDropdownOpen(!dropdownOpen)}
           className="flex items-center gap-2 hover:bg-card rounded-lg px-2 py-1.5 -mx-2 -my-1.5 transition-colors"
         >
-          <div className="h-8 w-8 flex items-center justify-center rounded-lg bg-card border border-border text-base">
-            {pair.icon}
-          </div>
+          <img
+            src={pair.icon}
+            alt={pair.name}
+            className="h-8 w-8 object-contain rounded-lg bg-card border border-border"
+          />
           <div className="text-left">
             <div className="flex items-center gap-1.5">
               <h2 className="text-sm font-bold text-foreground">{pair.symbol}</h2>

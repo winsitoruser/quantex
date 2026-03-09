@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Dark Theme (Default) */
   --color-background: #0a0e13;
   --color-foreground: #eaecef;
   --color-card: #12161c;
@@ -25,15 +26,39 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Light Theme */
+[data-theme="light"] {
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-card: #f5f7fa;
+  --color-card-hover: #eef1f5;
+  --color-surface: #f0f4f8;
+  --color-elevated: #ffffff;
+  --color-border: #d9e2ec;
+  --color-border-light: #bcccdc;
+  --color-muted: #6b7280;
+  --color-text-secondary: #4b5563;
+  --color-accent: #10b981;
+  --color-accent-hover: #059669;
+  --color-accent-muted: #10b9811a;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-danger-muted: #ef44441a;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+  --color-purple: #8b5cf6;
+  --color-cyan: #06b6d4;
+}
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: #1e2330 transparent;
+  scrollbar-color: var(--color-border) transparent;
 }
 
 *::-webkit-scrollbar { width: 5px; height: 5px; }
 *::-webkit-scrollbar-track { background: transparent; }
-*::-webkit-scrollbar-thumb { background: #1e2330; border-radius: 3px; }
-*::-webkit-scrollbar-thumb:hover { background: #272d3d; }
+*::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--color-border-light); }
 
 body {
   background: var(--color-background);
@@ -41,6 +66,7 @@ body {
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -80,6 +106,15 @@ input[type="number"] {
 
 .glass { background: rgba(18,22,28,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 .glass-subtle { background: rgba(18,22,28,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+
+/* Light mode glass variants */
+[data-theme="light"] .glass { background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+[data-theme="light"] .glass-subtle { background: rgba(255,255,255,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+
+/* Light mode shadow adjustments */
+[data-theme="light"] .shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

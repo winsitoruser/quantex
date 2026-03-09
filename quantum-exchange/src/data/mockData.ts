@@ -56,7 +56,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 1_920_000_000_000,
     high24h: 98500.0,
     low24h: 95200.0,
-    icon: "₿",
+    icon: "https://assets.coincap.io/assets/icons/btc@2x.png",
     sparkline: generateSparkline(97000, 500),
   },
   {
@@ -69,7 +69,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 415_000_000_000,
     high24h: 3520.0,
     low24h: 3380.0,
-    icon: "Ξ",
+    icon: "https://assets.coincap.io/assets/icons/eth@2x.png",
     sparkline: generateSparkline(3400, 30),
   },
   {
@@ -82,7 +82,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 94_000_000_000,
     high24h: 642.0,
     low24h: 628.0,
-    icon: "⬡",
+    icon: "https://assets.coincap.io/assets/icons/bnb@2x.png",
     sparkline: generateSparkline(634, 5),
   },
   {
@@ -95,7 +95,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 87_000_000_000,
     high24h: 203.0,
     low24h: 186.5,
-    icon: "◎",
+    icon: "https://assets.coincap.io/assets/icons/sol@2x.png",
     sparkline: generateSparkline(195, 4),
   },
   {
@@ -108,7 +108,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 134_000_000_000,
     high24h: 2.42,
     low24h: 2.28,
-    icon: "✕",
+    icon: "https://assets.coincap.io/assets/icons/xrp@2x.png",
     sparkline: generateSparkline(2.3, 0.05),
   },
   {
@@ -121,7 +121,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 34_500_000_000,
     high24h: 1.02,
     low24h: 0.94,
-    icon: "₳",
+    icon: "https://assets.coincap.io/assets/icons/ada@2x.png",
     sparkline: generateSparkline(0.96, 0.02),
   },
   {
@@ -134,7 +134,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 14_200_000_000,
     high24h: 40.5,
     low24h: 37.8,
-    icon: "▲",
+    icon: "https://assets.coincap.io/assets/icons/avax@2x.png",
     sparkline: generateSparkline(39, 0.8),
   },
   {
@@ -147,7 +147,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 47_000_000_000,
     high24h: 0.338,
     low24h: 0.295,
-    icon: "Ð",
+    icon: "https://assets.coincap.io/assets/icons/doge@2x.png",
     sparkline: generateSparkline(0.31, 0.01),
   },
   {
@@ -160,7 +160,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 10_800_000_000,
     high24h: 8.05,
     low24h: 7.62,
-    icon: "●",
+    icon: "https://assets.coincap.io/assets/icons/dot@2x.png",
     sparkline: generateSparkline(7.8, 0.15),
   },
   {
@@ -173,7 +173,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 10_900_000_000,
     high24h: 19.1,
     low24h: 18.0,
-    icon: "⬡",
+    icon: "https://assets.coincap.io/assets/icons/link@2x.png",
     sparkline: generateSparkline(18.4, 0.3),
   },
   {
@@ -186,7 +186,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 8_300_000_000,
     high24h: 0.92,
     low24h: 0.85,
-    icon: "⬡",
+    icon: "https://assets.coincap.io/assets/icons/matic@2x.png",
     sparkline: generateSparkline(0.88, 0.02),
   },
   {
@@ -199,7 +199,7 @@ export const cryptoPairs: CryptoPair[] = [
     marketCap: 7_400_000_000,
     high24h: 13.0,
     low24h: 12.1,
-    icon: "🦄",
+    icon: "https://assets.coincap.io/assets/icons/uni@2x.png",
     sparkline: generateSparkline(12.3, 0.25),
   },
 ];
@@ -249,14 +249,14 @@ export function generateTradeHistory(basePrice: number): TradeEntry[] {
 }
 
 export const walletAssets: WalletAsset[] = [
-  { symbol: "BTC", name: "Bitcoin", balance: 0.5432, value: 53139.42, change24h: 2.34, icon: "₿" },
-  { symbol: "ETH", name: "Ethereum", balance: 12.845, value: 44391.74, change24h: 1.87, icon: "Ξ" },
-  { symbol: "USDT", name: "Tether", balance: 25000.0, value: 25000.0, change24h: 0.01, icon: "$" },
-  { symbol: "SOL", name: "Solana", balance: 45.23, value: 8975.91, change24h: 5.67, icon: "◎" },
-  { symbol: "BNB", name: "BNB", balance: 8.5, value: 5390.79, change24h: -0.54, icon: "⬡" },
-  { symbol: "XRP", name: "XRP", balance: 5000.0, value: 11700.0, change24h: -1.23, icon: "✕" },
-  { symbol: "ADA", name: "Cardano", balance: 10000.0, value: 9800.0, change24h: 3.45, icon: "₳" },
-  { symbol: "DOGE", name: "Dogecoin", balance: 15000.0, value: 4860.0, change24h: 8.92, icon: "Ð" },
+  { symbol: "BTC", name: "Bitcoin", balance: 0.5432, value: 53139.42, change24h: 2.34, icon: "https://assets.coincap.io/assets/icons/btc@2x.png" },
+  { symbol: "ETH", name: "Ethereum", balance: 12.845, value: 44391.74, change24h: 1.87, icon: "https://assets.coincap.io/assets/icons/eth@2x.png" },
+  { symbol: "USDT", name: "Tether", balance: 25000.0, value: 25000.0, change24h: 0.01, icon: "https://assets.coincap.io/assets/icons/usdt@2x.png" },
+  { symbol: "SOL", name: "Solana", balance: 45.23, value: 8975.91, change24h: 5.67, icon: "https://assets.coincap.io/assets/icons/sol@2x.png" },
+  { symbol: "BNB", name: "BNB", balance: 8.5, value: 5390.79, change24h: -0.54, icon: "https://assets.coincap.io/assets/icons/bnb@2x.png" },
+  { symbol: "XRP", name: "XRP", balance: 5000.0, value: 11700.0, change24h: -1.23, icon: "https://assets.coincap.io/assets/icons/xrp@2x.png" },
+  { symbol: "ADA", name: "Cardano", balance: 10000.0, value: 9800.0, change24h: 3.45, icon: "https://assets.coincap.io/assets/icons/ada@2x.png" },
+  { symbol: "DOGE", name: "Dogecoin", balance: 15000.0, value: 4860.0, change24h: 8.92, icon: "https://assets.coincap.io/assets/icons/doge@2x.png" },
 ];
 
 export const announcements = [

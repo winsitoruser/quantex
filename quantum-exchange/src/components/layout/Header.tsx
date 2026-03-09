@@ -11,6 +11,7 @@ import {
   Wallet,
   LayoutDashboard,
   Zap,
+  Shield,
   ShieldCheck,
   Settings,
   ChevronDown,
@@ -20,11 +21,67 @@ import {
   Menu,
   X,
   ArrowRight,
+  Moon,
+  Sun,
+  Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage, useCurrency } from "@/i18n";
+import { useTheme } from "@/app/ThemeContext";
 import { type Locale, localeFlags, localeNames } from "@/i18n/translations";
 import type { CurrencyCode } from "@/i18n/CurrencyContext";
+
+interface NotificationItem {
+  id: string;
+  type: "trading" | "security" | "system" | "wallet";
+  title: string;
+  message: string;
+  time: string;
+  read: boolean;
+}
+
+const mockNotifications: NotificationItem[] = [
+  {
+    id: "1",
+    type: "security",
+    title: "New Login Detected",
+    message: "A new login was detected from Chrome on Windows.",
+    time: "5m ago",
+    read: false,
+  },
+  {
+    id: "2",
+    type: "trading",
+    title: "Order Filled",
+    message: "Your BTC/USDT buy order has been filled at $67,234.50.",
+    time: "12m ago",
+    read: false,
+  },
+  {
+    id: "3",
+    type: "wallet",
+    title: "Deposit Confirmed",
+    message: "Your USDT deposit of 5,000 USDT has been confirmed.",
+    time: "1h ago",
+    read: false,
+  },
+  {
+    id: "4",
+    type: "trading",
+    title: "Price Alert: ETH",
+    message: "ETH has reached your target price of $3,500.",
+    time: "2h ago",
+    read: true,
+  },
+  {
+    id: "5",
+    type: "system",
+    title: "Maintenance Scheduled",
+    message: "Scheduled maintenance on March 15, 2026.",
+    time: "3h ago",
+    read: true,
+  },
+];
 
 export default function Header() {
   const pathname = usePathname();
@@ -33,13 +90,17 @@ export default function Header() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationItem[]>(mockNotifications);
 
   const { locale, setLocale, t } = useLanguage();
   const { currency, setCurrency } = useCurrency();
+  const { theme, toggleTheme } = useTheme();
 
   const profileRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLDivElement>(null);
+  const notificationRef = useRef<HTMLDivElement>(null);
 
   const locales: Locale[] = ["en", "id", "ja", "zh", "ar"];
   const currencies: CurrencyCode[] = ["USD", "IDR"];
@@ -66,6 +127,7 @@ export default function Header() {
     setSearchOpen(false);
     setMoreOpen(false);
     setLangOpen(false);
+    setNotificationOpen(false);
     setMobileMenuOpen(false);
   }, []);
 
@@ -74,6 +136,7 @@ export default function Header() {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false);
       if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
       if (moreRef.current && !moreRef.current.contains(e.target as Node)) setMoreOpen(false);
+      if (notificationRef.current && !notificationRef.current.contains(e.target as Node)) setNotificationOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -166,7 +229,7 @@ export default function Header() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.97 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full left-0 mt-1.5 w-44 rounded-xl bg-elevated border border-border shadow-2xl shadow-black/40 overflow-hidden py-1"
+                  className="absolute top-full left-0 mt-1.5 w-44 rounded-xl bg-elevated border border-border shadow-2xl overflow-hidden py-1"
                 >
                   {moreLinks.map((link) => (
                     <Link
@@ -194,13 +257,132 @@ export default function Header() {
           </button>
 
           {/* Notifications */}
-          <Link
-            href="/notifications"
-            className="h-9 w-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-foreground hover:bg-surface transition-colors relative"
-          >
-            <Bell className="h-[18px] w-[18px]" />
-            <span className="absolute top-1 right-1 h-[6px] w-[6px] rounded-full bg-accent ring-2 ring-background" />
-          </Link>
+          <div ref={notificationRef} className="relative">
+            <button
+              onClick={() => setNotificationOpen(!notificationOpen)}
+              className="h-9 w-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-foreground hover:bg-surface transition-colors relative"
+            >
+              <Bell className="h-[18px] w-[18px]" />
+              {notifications.some((n) => !n.read) && (
+                <span className="absolute top-1 right-1 h-[6px] w-[6px] rounded-full bg-accent ring-2 ring-background" />
+              )}
+            </button>
+            <AnimatePresence>
+              {notificationOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full right-0 mt-1.5 w-80 rounded-xl bg-elevated border border-border shadow-2xl overflow-hidden"
+                >
+                  {/* Header */}
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-border/60">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">Notifications</p>
+                      <p className="text-[10px] text-muted mt-0.5">
+                        {notifications.filter((n) => !n.read).length} unread messages
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))}
+                      className="text-[11px] text-accent hover:text-accent-hover font-medium transition-colors"
+                    >
+                      Mark all read
+                    </button>
+                  </div>
+
+                  {/* Notifications List */}
+                  <div className="max-h-[400px] overflow-y-auto py-1">
+                    {notifications.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
+                        <div className="h-10 w-10 rounded-full bg-surface border border-border flex items-center justify-center mb-2">
+                          <Bell className="h-5 w-5 text-muted" />
+                        </div>
+                        <p className="text-sm font-medium text-foreground">No notifications</p>
+                        <p className="text-[11px] text-muted mt-0.5">You're all caught up!</p>
+                      </div>
+                    ) : (
+                      notifications.map((notification) => {
+                        const typeColors = {
+                          trading: "bg-accent/10 text-accent",
+                          security: "bg-warning/10 text-warning",
+                          system: "bg-info/10 text-info",
+                          wallet: "bg-purple/10 text-purple",
+                        };
+                        const typeIcons = {
+                          trading: Zap,
+                          security: Shield,
+                          system: Info,
+                          wallet: Wallet,
+                        };
+                        const TypeIcon = typeIcons[notification.type];
+
+                        return (
+                          <Link
+                            key={notification.id}
+                            href="/notifications"
+                            onClick={() => {
+                              setNotifications((prev) =>
+                                prev.map((n) => (n.id === notification.id ? { ...n, read: true } : n))
+                              );
+                              setNotificationOpen(false);
+                            }}
+                            className={cn(
+                              "flex items-start gap-3 px-4 py-3 transition-colors border-l-2",
+                              notification.read
+                                ? "border-transparent hover:bg-card-hover"
+                                : "border-accent bg-accent/5 hover:bg-accent/10"
+                            )}
+                          >
+                            <div
+                              className={cn(
+                                "shrink-0 h-8 w-8 rounded-lg flex items-center justify-center",
+                                typeColors[notification.type]
+                              )}
+                            >
+                              <TypeIcon className="h-4 w-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <p
+                                  className={cn(
+                                    "text-[13px] font-medium",
+                                    notification.read ? "text-text-secondary" : "text-foreground"
+                                  )}
+                                >
+                                  {notification.title}
+                                </p>
+                                {!notification.read && (
+                                  <span className="h-1.5 w-1.5 rounded-full bg-accent shrink-0" />
+                                )}
+                              </div>
+                              <p className="text-[11px] text-muted line-clamp-2 mb-1">
+                                {notification.message}
+                              </p>
+                              <p className="text-[10px] text-muted">{notification.time}</p>
+                            </div>
+                          </Link>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="border-t border-border/60 px-4 py-2.5">
+                    <Link
+                      href="/notifications"
+                      onClick={() => setNotificationOpen(false)}
+                      className="flex items-center justify-center w-full py-2 rounded-lg bg-surface hover:bg-card-hover text-[13px] font-medium text-text-secondary hover:text-foreground transition-colors"
+                    >
+                      View all notifications
+                      <ChevronDown className="h-3.5 w-3.5 ml-1 -rotate-90" />
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Language */}
           <div ref={langRef} className="relative">
@@ -218,7 +400,7 @@ export default function Header() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.97 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full right-0 mt-1.5 w-48 rounded-xl bg-elevated border border-border shadow-2xl shadow-black/40 overflow-hidden"
+                  className="absolute top-full right-0 mt-1.5 w-48 rounded-xl bg-elevated border border-border shadow-2xl overflow-hidden"
                 >
                   <div className="px-3 py-2 border-b border-border/60">
                     <p className="text-[10px] font-semibold text-muted uppercase tracking-wider">Language</p>
@@ -261,6 +443,19 @@ export default function Header() {
             </AnimatePresence>
           </div>
 
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="h-9 w-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-foreground hover:bg-surface transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? (
+              <Sun className="h-[18px] w-[18px]" />
+            ) : (
+              <Moon className="h-[18px] w-[18px]" />
+            )}
+          </button>
+
           {/* Profile Avatar */}
           <div ref={profileRef} className="relative ml-1">
             <button
@@ -276,7 +471,7 @@ export default function Header() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.97 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full right-0 mt-1.5 w-60 rounded-xl bg-elevated border border-border shadow-2xl shadow-black/40 overflow-hidden"
+                  className="absolute top-full right-0 mt-1.5 w-60 rounded-xl bg-elevated border border-border shadow-2xl overflow-hidden"
                 >
                   <div className="px-4 py-3 border-b border-border/60">
                     <p className="text-sm font-semibold text-foreground">AlexQuantum</p>
@@ -292,7 +487,7 @@ export default function Header() {
                       { icon: ShieldCheck, label: t.userMenu.kycVerification, href: "/kyc" },
                       { icon: Wallet, label: t.userMenu.assets, href: "/wallet" },
                       { icon: LayoutDashboard, label: t.userMenu.history, href: "/profile/history" },
-                      { icon: Settings, label: "Settings", href: "/settings" },
+                      { icon: Settings, label: "Settings", href: "/profile/settings" },
                     ].map((item) => {
                       const Icon = item.icon;
                       return (
@@ -437,6 +632,28 @@ export default function Header() {
                     </div>
                   </div>
                 </div>
+
+                <div className="px-3 mt-4">
+                  <p className="px-3 mb-2 text-[10px] font-semibold text-muted uppercase tracking-wider">
+                    Theme
+                  </p>
+                  <div className="px-3 py-2">
+                    <button
+                      onClick={toggleTheme}
+                      className={cn(
+                        "w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                        "bg-surface border border-border hover:border-accent/40"
+                      )}
+                    >
+                      <span className="text-foreground">{theme === "dark" ? "Dark Mode" : "Light Mode"}</span>
+                      {theme === "dark" ? (
+                        <Sun className="h-5 w-5 text-accent" />
+                      ) : (
+                        <Moon className="h-5 w-5 text-accent" />
+                      )}
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <div className="shrink-0 border-t border-border/60 p-4">
@@ -476,7 +693,7 @@ export default function Header() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: -10 }}
               transition={{ duration: 0.15 }}
-              className="fixed top-[10%] sm:top-[12%] left-1/2 -translate-x-1/2 z-[61] w-[calc(100%-2rem)] sm:w-full max-w-[500px] rounded-2xl bg-elevated border border-border shadow-2xl shadow-black/50 overflow-hidden"
+              className="fixed top-[10%] sm:top-[12%] left-1/2 -translate-x-1/2 z-[61] w-[calc(100%-2rem)] sm:w-full max-w-[500px] rounded-2xl bg-elevated border border-border shadow-2xl overflow-hidden"
             >
               <div className="flex items-center gap-3 px-4 h-12 border-b border-border/60">
                 <Search className="h-4 w-4 text-muted shrink-0" />

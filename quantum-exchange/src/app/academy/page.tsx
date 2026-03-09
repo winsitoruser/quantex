@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Search,
@@ -12,10 +11,12 @@ import {
   Users,
   Play,
   GraduationCap,
+  Bookmark,
 } from "lucide-react";
 import { academyCategories, academyArticles, featuredCourses } from "@/data/academyData";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/layout/Footer";
+import AcademyDetailModal from "@/components/academy/AcademyDetailModal";
 
 const levels = ["All Levels", "Beginner", "Intermediate", "Advanced"];
 
@@ -23,6 +24,8 @@ export default function AcademyPage() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeLevel, setActiveLevel] = useState("All Levels");
+  const [selectedArticle, setSelectedArticle] = useState<typeof academyArticles[0] | null>(null);
+  const [bookmarkedArticles, setBookmarkedArticles] = useState<Set<string>>(new Set());
 
   const filteredArticles = useMemo(() => {
     return academyArticles.filter((article) => {
@@ -42,6 +45,19 @@ export default function AcademyPage() {
       case "advanced": return "bg-purple/10 text-purple";
       default: return "bg-muted/10 text-muted";
     }
+  };
+
+  const handleBookmark = (e: React.MouseEvent, articleId: string) => {
+    e.stopPropagation();
+    setBookmarkedArticles((prev) => {
+      const next = new Set(prev);
+      if (next.has(articleId)) {
+        next.delete(articleId);
+      } else {
+        next.add(articleId);
+      }
+      return next;
+    });
   };
 
   return (
@@ -175,24 +191,36 @@ export default function AcademyPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
               >
-                <Link
-                  href={`/academy/${article.id}`}
-                  className="flex lg:flex-col gap-3 rounded-xl bg-card border border-border p-4 hover:border-accent/30 transition-colors h-full"
+                <div
+                  onClick={() => setSelectedArticle(article)}
+                  className="flex lg:flex-col gap-3 rounded-xl bg-card border border-border p-4 hover:border-accent/30 transition-colors h-full cursor-pointer"
                 >
-                  <div className="h-20 w-20 lg:h-32 lg:w-full shrink-0 rounded-xl bg-gradient-to-br from-card-hover to-border flex items-center justify-center">
-                    <BookOpen className="h-8 w-8 text-muted/30" />
+                  <div className="h-20 w-20 lg:h-32 lg:w-full shrink-0 rounded-xl overflow-hidden relative">
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center justify-between gap-2 mb-2">
                       <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${levelColor(article.level)}`}>
                         {article.level}
                       </span>
+                      <button
+                        onClick={(e) => handleBookmark(e, article.id)}
+                        className="h-6 w-6 flex items-center justify-center rounded text-muted hover:text-foreground transition-colors"
+                      >
+                        <Bookmark className={cn("h-3.5 w-3.5", bookmarkedArticles.has(article.id) && "fill-current text-accent")} />
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2">
                       <span className="text-xs text-muted">{article.readTime}</span>
                     </div>
                     <h3 className="text-sm font-bold text-foreground mb-1.5 line-clamp-2">{article.title}</h3>
                     <p className="text-xs text-muted line-clamp-2">{article.excerpt}</p>
                   </div>
-                </Link>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -207,6 +235,13 @@ export default function AcademyPage() {
       </section>
 
       <Footer />
+
+      {/* Article Detail Modal */}
+      <AcademyDetailModal
+        isOpen={!!selectedArticle}
+        onClose={() => setSelectedArticle(null)}
+        article={selectedArticle}
+      />
     </div>
   );
 }

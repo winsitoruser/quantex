@@ -69,7 +69,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "BTC",
     name: "Bitcoin",
-    icon: "₿",
+    icon: "https://assets.coincap.io/assets/icons/btc@2x.png",
     spotBalance: 0.5432,
     futuresBalance: 0.12,
     earnBalance: 0.05,
@@ -83,7 +83,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "ETH",
     name: "Ethereum",
-    icon: "Ξ",
+    icon: "https://assets.coincap.io/assets/icons/eth@2x.png",
     spotBalance: 12.845,
     futuresBalance: 5.0,
     earnBalance: 2.5,
@@ -97,7 +97,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "USDT",
     name: "Tether",
-    icon: "$",
+    icon: "https://assets.coincap.io/assets/icons/usdt@2x.png",
     spotBalance: 25_000.0,
     futuresBalance: 10_000.0,
     earnBalance: 15_000.0,
@@ -111,7 +111,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "SOL",
     name: "Solana",
-    icon: "◎",
+    icon: "https://assets.coincap.io/assets/icons/sol@2x.png",
     spotBalance: 45.23,
     futuresBalance: 20.0,
     earnBalance: 10.0,
@@ -125,7 +125,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "BNB",
     name: "BNB",
-    icon: "⬡",
+    icon: "https://assets.coincap.io/assets/icons/bnb@2x.png",
     spotBalance: 8.5,
     futuresBalance: 0.0,
     earnBalance: 5.0,
@@ -139,7 +139,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "XRP",
     name: "XRP",
-    icon: "✕",
+    icon: "https://assets.coincap.io/assets/icons/xrp@2x.png",
     spotBalance: 5_000.0,
     futuresBalance: 0.0,
     earnBalance: 2_000.0,
@@ -153,7 +153,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "ADA",
     name: "Cardano",
-    icon: "₳",
+    icon: "https://assets.coincap.io/assets/icons/ada@2x.png",
     spotBalance: 10_000.0,
     futuresBalance: 0.0,
     earnBalance: 5_000.0,
@@ -167,7 +167,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "DOGE",
     name: "Dogecoin",
-    icon: "Ð",
+    icon: "https://assets.coincap.io/assets/icons/doge@2x.png",
     spotBalance: 15_000.0,
     futuresBalance: 0.0,
     earnBalance: 0.0,
@@ -181,7 +181,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "AVAX",
     name: "Avalanche",
-    icon: "▲",
+    icon: "https://assets.coincap.io/assets/icons/avax@2x.png",
     spotBalance: 50.0,
     futuresBalance: 25.0,
     earnBalance: 0.0,
@@ -195,7 +195,7 @@ export const userAssets: UserAsset[] = [
   {
     symbol: "DOT",
     name: "Polkadot",
-    icon: "●",
+    icon: "https://assets.coincap.io/assets/icons/dot@2x.png",
     spotBalance: 200.0,
     futuresBalance: 0.0,
     earnBalance: 100.0,

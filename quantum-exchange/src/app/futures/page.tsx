@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useLanguage } from "@/i18n";
 import Footer from "@/components/layout/Footer";
 
+export const dynamic = "force-dynamic";
+
 export default function FuturesPage() {
   const { t } = useLanguage();
 

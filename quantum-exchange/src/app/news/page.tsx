@@ -13,10 +13,14 @@ import {
 import { newsArticles, newsCategories } from "@/data/newsData";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/layout/Footer";
+import NewsDetailModal from "@/components/news/NewsDetailModal";
 
 export default function NewsPage() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<typeof newsArticles[0] | null>(null);
+  const [bookmarkedArticles, setBookmarkedArticles] = useState<Set<string>>(new Set());
 
   const featured = newsArticles.filter((a) => a.featured);
   const filteredArticles = useMemo(() => {
@@ -25,9 +29,10 @@ export default function NewsPage() {
         article.title.toLowerCase().includes(search.toLowerCase()) ||
         article.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
       const matchCategory = activeCategory === "All" || article.category === activeCategory;
-      return matchSearch && matchCategory;
+      const matchTag = !activeTag || article.tags.includes(activeTag);
+      return matchSearch && matchCategory && matchTag;
     });
-  }, [search, activeCategory]);
+  }, [search, activeCategory, activeTag]);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -38,6 +43,27 @@ export default function NewsPage() {
     if (diff < 7) return `${diff} days ago`;
     return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   };
+
+  const handleBookmark = (e: React.MouseEvent, articleId: string) => {
+    e.stopPropagation();
+    setBookmarkedArticles((prev) => {
+      const next = new Set(prev);
+      if (next.has(articleId)) {
+        next.delete(articleId);
+      } else {
+        next.add(articleId);
+      }
+      return next;
+    });
+  };
+
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    newsArticles.forEach((article) => {
+      article.tags.forEach((tag) => tags.add(tag));
+    });
+    return Array.from(tags);
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -91,18 +117,24 @@ export default function NewsPage() {
       </section>
 
       {/* Featured Story */}
-      {search === "" && activeCategory === "All" && featured[0] && (
+      {search === "" && activeCategory === "All" && !activeTag && featured[0] && (
         <section className="py-12 border-t border-border">
           <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-foreground mb-6">Featured Story</h2>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl bg-card border border-border overflow-hidden hover:border-accent/30 transition-colors"
+              onClick={() => setSelectedArticle(featured[0])}
+              className="rounded-xl bg-card border border-border overflow-hidden hover:border-accent/30 transition-colors cursor-pointer"
             >
               <div className="grid grid-cols-1 lg:grid-cols-2">
-                <div className="h-48 lg:h-auto bg-gradient-to-br from-accent/10 via-card-hover to-purple/10 flex items-center justify-center relative">
-                  <Newspaper className="h-16 w-16 text-muted/20" />
+                <div className="h-48 lg:h-auto relative overflow-hidden">
+                  <img
+                    src={featured[0].image}
+                    alt={featured[0].title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-50" />
                   <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-accent/90 text-background text-xs font-bold">
                     Featured
                   </span>
@@ -116,8 +148,11 @@ export default function NewsPage() {
                   <h3 className="text-lg lg:text-xl font-bold text-foreground mb-2">{featured[0].title}</h3>
                   <p className="text-sm text-muted leading-relaxed mb-4">{featured[0].excerpt}</p>
                   <div className="flex items-center gap-2">
-                    <button className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted hover:text-foreground transition-colors">
-                      <Bookmark className="h-4 w-4" />
+                    <button 
+                      onClick={(e) => handleBookmark(e, featured[0].id)}
+                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted hover:text-foreground transition-colors"
+                    >
+                      <Bookmark className={cn("h-4 w-4", bookmarkedArticles.has(featured[0].id) && "fill-current text-accent")} />
                     </button>
                     <button className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted hover:text-foreground transition-colors">
                       <Share2 className="h-4 w-4" />
@@ -156,10 +191,23 @@ export default function NewsPage() {
           </div>
 
           <div className="flex items-center gap-2 mb-8 flex-wrap">
-            {["Bitcoin", "ETF", "DeFi", "Layer 2", "AI Tokens", "Regulation", "Solana"].map((tag) => (
+            <button
+              onClick={() => setActiveTag(null)}
+              className={cn(
+                "px-3 py-1.5 rounded-full bg-background border border-border text-xs whitespace-nowrap transition-colors",
+                !activeTag ? "text-accent border-accent/30" : "text-muted hover:text-accent hover:border-accent/30"
+              )}
+            >
+              All Tags
+            </button>
+            {allTags.map((tag) => (
               <button
                 key={tag}
-                className="px-3 py-1.5 rounded-full bg-background border border-border text-xs text-muted whitespace-nowrap hover:text-accent hover:border-accent/30 transition-colors"
+                onClick={() => setActiveTag(tag === activeTag ? null : tag)}
+                className={cn(
+                  "px-3 py-1.5 rounded-full bg-background border border-border text-xs whitespace-nowrap transition-colors",
+                  activeTag === tag ? "text-accent border-accent/30" : "text-muted hover:text-accent hover:border-accent/30"
+                )}
               >
                 #{tag}
               </button>
@@ -174,10 +222,16 @@ export default function NewsPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
-                className="rounded-xl bg-card border border-border overflow-hidden hover:border-accent/30 transition-colors"
+                onClick={() => setSelectedArticle(article)}
+                className="rounded-xl bg-card border border-border overflow-hidden hover:border-accent/30 transition-colors cursor-pointer"
               >
-                <div className="h-36 bg-gradient-to-br from-card-hover to-border flex items-center justify-center">
-                  <Newspaper className="h-8 w-8 text-muted/20" />
+                <div className="h-36 relative overflow-hidden">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-30" />
                 </div>
                 <div className="p-4 lg:p-5">
                   <div className="flex items-center gap-2 mb-2 text-xs text-muted">
@@ -191,8 +245,11 @@ export default function NewsPage() {
                       <Clock className="h-3.5 w-3.5" /> {article.readTime} · {formatDate(article.date)}
                     </span>
                     <div className="flex items-center gap-1">
-                      <button className="h-7 w-7 flex items-center justify-center rounded-lg text-muted hover:text-foreground transition-colors">
-                        <Bookmark className="h-3.5 w-3.5" />
+                      <button 
+                        onClick={(e) => handleBookmark(e, article.id)}
+                        className="h-7 w-7 flex items-center justify-center rounded-lg text-muted hover:text-foreground transition-colors"
+                      >
+                        <Bookmark className={cn("h-3.5 w-3.5", bookmarkedArticles.has(article.id) && "fill-current text-accent")} />
                       </button>
                       <button className="h-7 w-7 flex items-center justify-center rounded-lg text-muted hover:text-foreground transition-colors">
                         <Share2 className="h-3.5 w-3.5" />
@@ -214,6 +271,13 @@ export default function NewsPage() {
       </section>
 
       <Footer />
+
+      {/* Article Detail Modal */}
+      <NewsDetailModal
+        isOpen={!!selectedArticle}
+        onClose={() => setSelectedArticle(null)}
+        article={selectedArticle}
+      />
     </div>
   );
 }

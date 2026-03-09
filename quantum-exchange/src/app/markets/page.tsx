@@ -160,9 +160,11 @@ export default function MarketsPage() {
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="h-9 w-9 flex items-center justify-center rounded-lg bg-background border border-border text-lg">
-                    {pair.icon}
-                  </div>
+                  <img
+                    src={pair.icon}
+                    alt={pair.name}
+                    className="h-9 w-9 object-contain rounded-lg bg-background border border-border"
+                  />
                   <div>
                     <p className="text-sm font-bold text-foreground">{pair.symbol}</p>
                     <p className="text-xs text-muted">{pair.name}</p>
@@ -281,9 +283,11 @@ export default function MarketsPage() {
                       )}
                     />
                   </button>
-                  <div className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg bg-background border border-border text-base">
-                    {pair.icon}
-                  </div>
+                  <img
+                    src={pair.icon}
+                    alt={pair.name}
+                    className="h-8 w-8 shrink-0 object-contain rounded-lg bg-background border border-border"
+                  />
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-foreground truncate">
                       {pair.symbol}

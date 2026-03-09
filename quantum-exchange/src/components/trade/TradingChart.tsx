@@ -790,7 +790,7 @@ export default function TradingChart({ symbol, basePrice }: TradingChartProps) {
         <>
           <div className="fixed inset-0 z-[100]" onClick={() => setShowChartTypeMenu(false)} />
           <div
-            className="fixed z-[101] bg-[#0d1117] border border-border rounded-lg shadow-2xl overflow-hidden"
+            className="fixed z-[101] bg-elevated border border-border rounded-lg shadow-2xl overflow-hidden"
             style={{ top: chartTypePos.top, left: chartTypePos.left }}
           >
             {chartTypes.map((ct) => (

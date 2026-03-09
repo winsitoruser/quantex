@@ -78,9 +78,11 @@ export default function WithdrawModal({ isOpen, onClose, asset }: WithdrawModalP
           <div className="flex items-center justify-between px-6 py-4 border-b border-border">
             <div className="flex items-center gap-3">
               {asset && (
-                <div className="h-9 w-9 flex items-center justify-center rounded-xl bg-background border border-border text-base">
-                  {asset.icon}
-                </div>
+                <img
+                  src={asset.icon}
+                  alt={asset.name}
+                  className="h-9 w-9 object-contain rounded-xl bg-background border border-border"
+                />
               )}
               <div>
                 <h2 className="text-base font-bold text-foreground">

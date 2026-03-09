@@ -114,7 +114,11 @@ export default function HeroSection() {
                       className="shrink-0 rounded-xl bg-surface/80 border border-border/60 p-3 min-w-[130px] hover:border-accent/30 transition-all group"
                     >
                       <div className="flex items-center gap-1.5 mb-1.5">
-                        <span className="text-sm">{coin.icon}</span>
+                        <img
+                          src={coin.icon}
+                          alt={coin.name}
+                          className="h-5 w-5 object-contain"
+                        />
                         <span className="text-[13px] font-semibold text-foreground">{coin.symbol.split("/")[0]}</span>
                         <span className="text-[9px] text-muted">/USDT</span>
                       </div>

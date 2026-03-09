@@ -83,9 +83,12 @@ export default function MarketOverview() {
                 >
                   {/* Name */}
                   <div className="flex items-center gap-2.5">
-                    <div className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg bg-surface border border-border/60 text-sm">
-                      {pair.icon}
-                    </div>
+                    <img
+                      src={pair.icon}
+                      alt={pair.name}
+                      className="h-8 w-8 shrink-0 object-contain rounded-lg bg-surface border border-border/60"
+                      loading="lazy"
+                    />
                     <div>
                       <div className="flex items-center gap-1">
                         <p className="text-[13px] font-semibold text-foreground">{pair.symbol.split("/")[0]}</p>

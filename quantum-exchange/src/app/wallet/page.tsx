@@ -32,6 +32,9 @@ import { formatPercent } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import DepositModal from "@/components/wallet/DepositModal";
 import WithdrawModal from "@/components/wallet/WithdrawModal";
+import TransferModal from "@/components/wallet/TransferModal";
+import BuyCryptoModal from "@/components/wallet/BuyCryptoModal";
+import WalletHistoryModal from "@/components/wallet/WalletHistoryModal";
 import { useLanguage, useCurrency } from "@/i18n";
 import Footer from "@/components/layout/Footer";
 
@@ -64,6 +67,9 @@ export default function WalletPage() {
   const [balanceTf, setBalanceTf] = useState("1M");
   const [depositOpen, setDepositOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [transferOpen, setTransferOpen] = useState(false);
+  const [buyCryptoOpen, setBuyCryptoOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState<typeof walletAssets[0] | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -130,7 +136,10 @@ export default function WalletPage() {
               <h1 className="text-xl font-bold text-foreground tracking-tight">Assets</h1>
               <p className="text-[12px] text-text-secondary mt-0.5">Manage your crypto portfolio</p>
             </div>
-            <button className="h-8 px-4 rounded-lg border border-border/60 text-[12px] font-medium text-text-secondary hover:text-foreground hover:bg-surface transition-colors inline-flex items-center gap-1.5">
+            <button 
+              onClick={() => setHistoryOpen(true)}
+              className="h-8 px-4 rounded-lg border border-border/60 text-[12px] font-medium text-text-secondary hover:text-foreground hover:bg-surface transition-colors inline-flex items-center gap-1.5"
+            >
               <History className="h-3.5 w-3.5" /> History
             </button>
           </div>
@@ -175,8 +184,8 @@ export default function WalletPage() {
                 {[
                   { icon: Download, label: t.common.deposit, primary: true, action: () => handleDeposit() },
                   { icon: Send, label: t.common.withdraw, primary: false, action: () => handleWithdraw() },
-                  { icon: ArrowRightLeft, label: t.common.transfer, primary: false, action: () => {} },
-                  { icon: Plus, label: t.common.buyCrypto, primary: false, action: () => {} },
+                  { icon: ArrowRightLeft, label: t.common.transfer, primary: false, action: () => setTransferOpen(true) },
+                  { icon: Plus, label: t.common.buyCrypto, primary: false, action: () => setBuyCryptoOpen(true) },
                 ].map(({ icon: Icon, label, primary, action }) => (
                   <button
                     key={label}
@@ -382,9 +391,12 @@ export default function WalletPage() {
                   className="grid grid-cols-[2fr_1fr_1fr_100px_160px] gap-3 items-center px-4 py-3 hover:bg-card-hover/40 transition-colors border-b border-border/30 last:border-0"
                 >
                   <div className="flex items-center gap-2.5">
-                    <div className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg bg-surface border border-border/60 text-sm">
-                      {asset.icon}
-                    </div>
+                    <img
+                      src={asset.icon}
+                      alt={asset.name}
+                      className="h-8 w-8 shrink-0 object-contain rounded-lg bg-surface border border-border/60"
+                      loading="lazy"
+                    />
                     <div>
                       <p className="text-[13px] font-semibold text-foreground">{asset.symbol}</p>
                       <p className="text-[10px] text-muted">{asset.name}</p>
@@ -439,9 +451,12 @@ export default function WalletPage() {
                   className="rounded-xl bg-surface/60 border border-border/50 p-3.5 active:bg-card-hover transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
-                    <div className="h-9 w-9 shrink-0 flex items-center justify-center rounded-lg bg-background border border-border/60 text-base">
-                      {asset.icon}
-                    </div>
+                    <img
+                      src={asset.icon}
+                      alt={asset.name}
+                      className="h-9 w-9 shrink-0 object-contain rounded-lg bg-background border border-border/60"
+                      loading="lazy"
+                    />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         <p className="text-[13px] font-bold text-foreground">{asset.symbol}</p>
@@ -499,6 +514,20 @@ export default function WalletPage() {
         isOpen={withdrawOpen}
         onClose={() => setWithdrawOpen(false)}
         asset={selectedAsset ? { symbol: selectedAsset.symbol, name: selectedAsset.name, icon: selectedAsset.icon, balance: selectedAsset.balance, value: selectedAsset.value } : undefined}
+      />
+      <TransferModal
+        isOpen={transferOpen}
+        onClose={() => setTransferOpen(false)}
+        asset={selectedAsset ? { symbol: selectedAsset.symbol, name: selectedAsset.name, icon: selectedAsset.icon, balance: selectedAsset.balance } : undefined}
+      />
+      <BuyCryptoModal
+        isOpen={buyCryptoOpen}
+        onClose={() => setBuyCryptoOpen(false)}
+        asset={selectedAsset ? { symbol: selectedAsset.symbol, name: selectedAsset.name, icon: selectedAsset.icon } : undefined}
+      />
+      <WalletHistoryModal
+        isOpen={historyOpen}
+        onClose={() => setHistoryOpen(false)}
       />
     </div>
   );
